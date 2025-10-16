@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Contact from "./components/Contact";
+import About from "./components/About";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -11,18 +12,12 @@ function App() {
         <Navbar activeSection={activeSection}/>
         <main>
           <Hero/>
+          <About/>
         </main>
         <footer>
           <Contact/>
         </footer>
     </div>);
-    // tttt
-
-
 }
 
 export default App;
-
-
-//hiiii
-//lordvoldmort
