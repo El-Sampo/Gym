@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import Features from "./components/Features";
+import Classes from "./components/Classes";
 import Contact from "./components/Contact";
 import About from "./components/About";
 
@@ -13,6 +15,9 @@ function App() {
         <main>
           <Hero/>
           <About/>
+          <Features/>
+
+          <Classes />
         </main>
         <footer>
           <Contact/>
