@@ -151,8 +151,7 @@ function Contact() {
                     xml:space="preserve"
                     stroke="#d80e0e"
                   >
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g
+                   <g
                       id="SVGRepo_tracerCarrier"
                       stroke-linecap="round"
                       stroke-linejoin="round"

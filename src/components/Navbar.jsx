@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
-function Navbar({ activeSection }) {
+function Navbar({ activeSection, setActiveSection }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const navlinks = [
     { name: "Home", href: "#home", id: "home" },
@@ -51,11 +66,23 @@ function Navbar({ activeSection }) {
               <a
                 href={link.href}
                 key={link.id}
-                className={`px-3 py-2 mx-1 text-sm font-medium transition-all duration-300 relative group `}
+                onClick={() => setActiveSection(link.id) }
+                
+                className={`px-3 py-2 mx-1 text-sm font-medium transition-all duration-300 relative group ${
+                  activeSection === link.id
+                    ? scrolled
+                      ? "text-red-600"
+                      : "text-white"
+                    : scrolled
+                    ? "text-gray-700 hover:text-red-600"
+                    : "text-gray-200 hover:text-white"
+                } `}
               >
                 {link.name}
                 <span
-                  className={`absolute bottom-0 left-0 w-full h-0.5 bg-red-600 group-hover:w-full transform origin-left scale-x-0 group-hover:scale-x-100 transition-all duration-300`}
+                  className={`absolute bottom-0 left-0 w-full h-0.5 bg-red-600 group-hover:w-full transform origin-left scale-x-0 group-hover:scale-x-100 transition-all duration-300 ${
+                    activeSection === link.id ? "scale-x-100" : ""
+                  }`}
                 ></span>
               </a>
             ))}

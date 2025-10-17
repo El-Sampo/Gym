@@ -54,8 +54,8 @@ function About() {
                 alt=""
                 className="w-full rounded-lg shadow-xl h-[500px] object-cover"
               />
-                <div class="absolute -bottom-6 -left-6 bg-red-600 text-white p-6 rounded-lg shadow-lg hidden md:block">
-                <div class="text-2xl font-bold">Premium Facilities</div>
+                <div className="absolute -bottom-6 -left-6 bg-red-600 text-white p-6 rounded-lg shadow-lg hidden md:block">
+                <div className="text-2xl font-bold">Premium Facilities</div>
                 <p>15000 sq ft of workout space</p>
                 </div>
             </div>
