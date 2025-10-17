@@ -14,8 +14,6 @@ function Hero() {
         <div
           className={`abslote inset-0 w-full h-full bg-cover bg-center transition-opacity duration-2000`}
         ></div>
-
-        
       </div>
     </div>
   );

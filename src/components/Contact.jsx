@@ -192,8 +192,8 @@ function Contact() {
             </div>
           </div>
 
-          <div>
-            <div className="bg-white rounded-xl shadow-sm p-8">
+          <div className="bg-white rounded-xl shadow-sm p-8">
+            <div >
               <h3 className="text-2xl font-bold text-gray-800 mb-6">
                 Send Us a Message
               </h3>

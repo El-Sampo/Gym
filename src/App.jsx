@@ -9,6 +9,7 @@ import Trainers from "./components/Trainers";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import Pricing from "./components/Pricing";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -18,6 +19,7 @@ function App() {
     "features",
     "about",
     "classes",
+    "pricing",
     "trainers",
     "testimonials",
     "contact",
@@ -26,7 +28,7 @@ function App() {
   useEffect(() => {
     const handleScroll = () => {
       const reveals = document.querySelectorAll(".reveal");
-      for(let i = 0; i < reveals.length; i++) {
+      for (let i = 0; i < reveals.length; i++) {
         const windowHeight = window.innerHeight;
         const revealTop = reveals[i].getBoundingClientRect().top;
         const revealPoint = 150;
@@ -38,16 +40,16 @@ function App() {
 
     const ScrollPosition = window.scrollY;
 
-    for(let i = sections.length - 1; i >= 0; i--) {
+    for (let i = sections.length - 1; i >= 0; i--) {
       const section = document.getElementById(sections[i]);
-      if (section && ScrollPosition >= section.offsetTop -200) {
+      if (section && ScrollPosition >= section.offsetTop - 100) {
         setActiveSection(sections[i]);
         break;
       }
     }
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll;
+    handleScroll();
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -68,7 +70,7 @@ function App() {
 
     const ScrollPosition = window.scrollY;
 
-    for(let i = sections.length - 1; i >= 0; i--) {
+    for (let i = sections.length - 1; i >= 0; i--) {
       const section = document.getElementById(sections[i]);
       if (section && ScrollPosition >= section.offsetTop - 200) {
         setActiveSection(sections[i]);
@@ -77,7 +79,7 @@ function App() {
     }
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll;
+    handleScroll();
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -91,11 +93,12 @@ function App() {
       />
       <main>
         <Hero />
+        <Features />
+        <About />
+        <Classes />
+        <Pricing />
         <Trainers />
         <Testimonials />
-        <About />
-        <Features />
-        <Classes />
         <Contact />
       </main>
       <Footer />
