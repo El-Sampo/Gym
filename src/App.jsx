@@ -91,14 +91,13 @@ function App() {
         setActiveSection={setActiveSection}
       />
       <main>
-        <home/>
+        <Home/>
         <Hero />
         <Features/>
         <Trainers />
         <Testimonials />
         <About />
         <Features />
-
         <Classes />
         <Contact />
       </main>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
-const features = [
+function FeaturesSection() {
+
+  const Features = [
   {
     title: "Cutting-Edge Equipment",
     description: "Experience premium fitness with state-of-the-art equipment featuring the latest technology...",
@@ -51,7 +53,6 @@ const features = [
   },
 ];
 
-export default function FeaturesSection() {
   const [selected, setSelected] = useState(2);
 
   return (
@@ -120,3 +121,5 @@ export default function FeaturesSection() {
     </section>
   );
 }
+
+export default FeaturesSection;
