@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 function Classes() {
@@ -100,7 +99,7 @@ const classList = [
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {/* I will use Logic */}
            {classCategories.map((category,index) => (
-            <button className={`px-6 py-2 rounded-full transition duration-300 ${activeCategory === category ? "bg-red-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`} onClick={()=> setActiveCategory(category)}>
+            <button className={`px-6 py-2 rounded-full transition duration-300 ${activeCategory === category ? "bg-red-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}} onClick={()=> setActiveCategory(category)`}>
             {category}
           </button>
           ))}
@@ -140,7 +139,7 @@ const classList = [
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                   </svg>
-                  Time
+                  {cls.time}
               </div>
             </div>
           </div>
