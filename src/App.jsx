@@ -90,7 +90,6 @@ function App() {
         setActiveSection={setActiveSection}
       />
       <main>
-        <home/>
         <Hero />
         <Trainers />
         <Testimonials />
