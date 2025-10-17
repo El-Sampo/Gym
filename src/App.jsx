@@ -14,14 +14,14 @@ function App() {
   const [activeSection, setActiveSection] = useState("home");
 
   const sections = [
-    "home",
-    "features",
-    "about",
-    "classes",
-    "pricing",
-    "trainers",
-    "testimonials",
-    "contact",
+    "#home",
+    "#features",
+    "#about",
+    "#classes",
+    "#pricing",
+    "#trainers",
+    "#testimonials",
+    "#contact",
   ];
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function App() {
 
     for (let i = sections.length - 1; i >= 0; i--) {
       const section = document.getElementById(sections[i]);
-      if (section && ScrollPosition >= section.offsetTop - 100) {
+      if (section && ScrollPosition >= section.offsetTop - 200) {
         setActiveSection(sections[i]);
         break;
       }
