@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
 import Features from "./components/Features";
 import Classes from "./components/Classes";
 import Contact from "./components/Contact";
@@ -9,8 +8,9 @@ import Trainers from "./components/Trainers";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-import HomeLanding from "./components/home";
+import Home from "./components/Home";
 import FeaturesSection from "./components/Features";
+import Pricing from './components/Pricing';
 function App() {
   const [activeSection, setActiveSection] = useState("home");
 
@@ -92,13 +92,13 @@ function App() {
       />
       <main>
         <Home/>
-        <Hero />
-        <Features/>
+        <FeaturesSection/>
         <Trainers />
         <Testimonials />
         <About />
         <Features />
         <Classes />
+        <Pricing />
         <Contact />
       </main>
       <Footer />

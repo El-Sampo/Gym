@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 
-function FeaturesSection() {
-
-  const Features = [
+const features = [
   {
     title: "Cutting-Edge Equipment",
     description: "Experience premium fitness with state-of-the-art equipment featuring the latest technology...",
@@ -17,7 +15,7 @@ function FeaturesSection() {
     details:
       "Accessible 24/7\nYour fitness journey doesn’t stop when the sun sets. Enjoy unlimited access to our facilities.",
     image:
-      "/images/Accessible.jpg",
+      "./",
   },
   {
     title: "Elite Personal Training",
@@ -53,6 +51,7 @@ function FeaturesSection() {
   },
 ];
 
+function FeaturesSection() {
   const [selected, setSelected] = useState(2);
 
   return (
