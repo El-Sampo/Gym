@@ -9,8 +9,7 @@ import Trainers from "./components/Trainers";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-import HomeLanding from "./components/home";
-import FeaturesSection from "./components/Features";
+
 function App() {
   const [activeSection, setActiveSection] = useState("home");
 
@@ -91,9 +90,8 @@ function App() {
         setActiveSection={setActiveSection}
       />
       <main>
-        <Home/>
+        <home/>
         <Hero />
-        <Features/>
         <Trainers />
         <Testimonials />
         <About />
