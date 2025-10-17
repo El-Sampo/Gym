@@ -1,6 +1,6 @@
 import React from "react";
 
-function HomeLanding() {
+export default function HomeLanding() {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-black">
       {/* Background Image */}
@@ -92,5 +92,3 @@ function HomeLanding() {
     </div>
   );
 }
-
-export default HomeLanding;
