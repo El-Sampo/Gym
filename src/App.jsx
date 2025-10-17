@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+import Home from "./components/Home";
 import Features from "./components/Features";
 import Classes from "./components/Classes";
 import Contact from "./components/Contact";
@@ -9,13 +9,7 @@ import Trainers from "./components/Trainers";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-<<<<<<< Updated upstream
 import Pricing from "./components/Pricing";
-
-=======
-import HomeLanding from "./components/home";
-import FeaturesSection from "./components/Features";
->>>>>>> Stashed changes
 function App() {
   const [activeSection, setActiveSection] = useState("home");
 
@@ -97,16 +91,11 @@ function App() {
         setActiveSection={setActiveSection}
       />
       <main>
-        <home/>
-        <Hero />
-<<<<<<< Updated upstream
+        <Home />
         <Features />
         <About />
         <Classes />
         <Pricing />
-=======
-        <Features/>
->>>>>>> Stashed changes
         <Trainers />
         <Testimonials />
         <Contact />
