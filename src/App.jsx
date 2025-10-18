@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router";
+import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import Features from "./components/Features";
-import Classes from "./components/Classes";
-import Contact from "./components/Contact";
-import About from "./components/About";
-import Trainers from "./components/Trainers";
-import Testimonials from "./components/Testimonials";
+import AboutPage from "./pages/AboutPage";
+import ClassesPage from "./pages/ClassesPage";
+import PricingPage from "./pages/PricingPage";
+import FitnessTracker from "./pages/FitnessTracker";
+import ContactPage from "./pages/ContactPage";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-import Pricing from "./components/Pricing";
 function App() {
   const [activeSection, setActiveSection] = useState("home");
 
@@ -91,14 +90,14 @@ function App() {
         setActiveSection={setActiveSection}
       />
       <main>
-        <Home />
-        <Features />
-        <About />
-        <Classes />
-        <Pricing />
-        <Trainers />
-        <Testimonials />
-        <Contact />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/aboutpage" element={<AboutPage />} />
+          <Route path="/classespage" element={<ClassesPage />} />
+          <Route path="/pricingpage" element={<PricingPage />} />
+          <Route path="/fitnesstracker" element={<FitnessTracker />} />
+          <Route path="/contactpage" element={<ContactPage />} />
+        </Routes>
       </main>
       <Footer />
       <ScrollToTop />

@@ -25,14 +25,12 @@ function Navbar({ activeSection, setActiveSection }) {
   }, []);
 
   const navlinks = [
-    { name: "Home", href: "#home", id: "home" },
-    { name: "Features", href: "#features", id: "features" },
-    { name: "About", href: "#about", id: "about" },
-    { name: "Classes", href: "#classes", id: "classes" },
-    { name: "Pricing", href: "#pricing", id: "pricing" },
-    { name: "Trainers", href: "#trainers", id: "trainers" },
-    { name: "Testimonials", href: "#testimonials", id: "testimonials" },
-    { name: "Contact", href: "#contact", id: "contact" },
+    { name: "Home", href: "/", id: "home" },
+    { name: "About", href: "/aboutpage", id: "about" },
+    { name: "Classes", href: "/classespage", id: "classes" },
+    { name: "Pricing", href: "/pricingpage", id: "pricing" },
+    { name: "FitnessTracker", href: "/fitnesstracker", id: "fitnesstracker" },
+    { name: "Contact", href: "/contactpage", id: "contact" },
   ];
   return (
     <nav
