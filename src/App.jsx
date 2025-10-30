@@ -13,6 +13,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import WeightLogPage from "./pages/WeightLogPage"; 
 import WorkoutsPage from "./pages/WorkoutsPage"; 
 import MealPlansPage from "./pages/MealPlansPage"; 
+import ExercisesPage from "./pages/ExercisesPage";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -81,6 +82,7 @@ function App() {
           <Route path="/log-weight" element={<WeightLogPage />} /> 
           <Route path="/workouts" element={<WorkoutsPage />} />
           <Route path="/meal-plans" element={<MealPlansPage />} /> 
+          <Route path="/exercises" element={<ExercisesPage />} />
 
         </Routes>
       </main>

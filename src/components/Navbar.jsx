@@ -30,6 +30,7 @@ function Navbar({ activeSection, setActiveSection }) {
     { name: "Classes", href: "/classespage", id: "classes" },
     { name: "Pricing", href: "/pricingpage", id: "pricing" },
     { name: "FitnessTracker", href: "/fitnesstracker", id: "fitnesstracker" },
+    { name: "Exercises", href: "/exercises", id: "exercises" },
     { name: "Contact", href: "/contactpage", id: "contact" },
   ];
   return (
