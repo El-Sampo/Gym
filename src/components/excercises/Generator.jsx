@@ -49,7 +49,7 @@ export default function Generator({
         title={"Pick your Program"}
         description={"Select the workout you wish to follow."}
       />
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {Object.keys(WORKOUTS).map((type, typeIndex) => {
           return (
             <button
@@ -58,8 +58,10 @@ export default function Generator({
                 setPoison(type);
               }}
               key={typeIndex}
-              className={`py-3 px-4 rounded-md font-semibold duration-200 border-2 ${
-                type === poison ? "border-red-600 bg-white text-gray-900" : "border-gray-300 bg-white text-gray-700 hover:border-red-600"
+              className={`py-3 px-4 rounded-lg font-semibold duration-200 border ${
+                type === poison
+                  ? "border-red-600 bg-white text-gray-900 shadow-sm ring-1 ring-red-600/10"
+                  : "border-gray-200 bg-white/80 text-gray-700 hover:border-red-600 hover:shadow"
               }`}
             >
               <p className="capitalize">{type?.replaceAll("_", " ")}</p>
@@ -73,7 +75,7 @@ export default function Generator({
         title={"Choose target muscles"}
         description={"Select the muscles you want to focus on."}
       />
-      <div className="flex flex-col border-2 rounded-lg border-gray-300 font-semibold duration-200 bg-white">
+      <div className="flex flex-col border rounded-lg border-gray-200 font-semibold duration-200 bg-white/90 backdrop-blur">
         <button
           onClick={toggleModal}
           className={`relative flex justify-center items-center p-3 ${
@@ -88,7 +90,7 @@ export default function Generator({
           <IoCaretDown className="absolute right-3 top-1/2 -translate-y-1/2" />
         </button>
         {showModal && (
-          <div className="flex flex-col px-3 pb-3 text-gray-800">
+          <div className="flex flex-col px-3 pb-3 text-gray-800 animate-in fade-in">
             {(poison === "individual"
               ? WORKOUTS[poison]
               : Object.keys(WORKOUTS[poison])
@@ -99,10 +101,10 @@ export default function Generator({
                     updateMuscles(muscleGroup);
                   }}
                   key={muscleGroupIndex}
-                  className={`py-3 duration-200 capitalize text-left ${
+                  className={`py-3 duration-200 capitalize text-left rounded-md px-2 ${
                     muscles?.includes(muscleGroup)
-                      ? "text-red-600 underline"
-                      : "hover:text-red-600"
+                      ? "text-red-600 bg-red-50"
+                      : "hover:text-red-600 hover:bg-gray-50"
                   }`}
                 >
                   <p className="uppercase">{muscleGroup}</p>
@@ -118,14 +120,16 @@ export default function Generator({
         title={"Select your goal"}
         description={"Choose the objective that matches your plan."}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {Object.keys(SCHEMES).map((scheme, schemesIndex) => {
           return (
             <button
               onClick={() => setGoal(scheme)}
               key={schemesIndex}
-              className={`py-3 px-4 rounded-md font-semibold duration-200 border-2 ${
-                scheme === goal ? "border-red-600 bg-white text-gray-900" : "border-gray-300 bg-white text-gray-700 hover:border-red-600"
+              className={`py-3 px-4 rounded-lg font-semibold duration-200 border ${
+                scheme === goal
+                  ? "border-red-600 bg-white text-gray-900 shadow-sm ring-1 ring-red-600/10"
+                  : "border-gray-200 bg-white/80 text-gray-700 hover:border-red-600 hover:shadow"
               }`}
             >
               <p className="capitalize">{scheme.replaceAll("_", " ")}</p>
@@ -133,7 +137,9 @@ export default function Generator({
           );
         })}
       </div>
-      <Button fun={updateWorkout} text={"Generate Plan"} />
+      <div className="mt-6">
+        <Button fun={updateWorkout} text={"Generate Plan"} />
+      </div>
     </SectionWrapper>
   );
 }

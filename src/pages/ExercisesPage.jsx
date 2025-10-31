@@ -20,9 +20,11 @@ export default function ExercisesPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+    <main className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 via-white to-gray-50 text-gray-900">
       <div className="pt-24" />
-      <Generator 
+      <section className="w-full">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Generator 
         poison={poison}
         setPoison={setPoison}
         muscles={muscles}
@@ -30,8 +32,16 @@ export default function ExercisesPage() {
         goal={goal}
         setGoal={setGoal}
         updateWorkout={updateWorkout}
-      />
-      {workout && <WorkOut workout={workout}/>}
+          />
+        </div>
+      </section>
+      {workout && (
+        <section className="w-full pb-16">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <WorkOut workout={workout}/>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
