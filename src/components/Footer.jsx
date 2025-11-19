@@ -1,6 +1,5 @@
 import React from "react";
 
-
 function Footer() {
   const navlinks = [
     { name: "Home", href: "#home", id: "home" },
@@ -29,7 +28,7 @@ function Footer() {
                 className="text-gray-400  hover:text-white transition duration-300"
               >
                 <svg
-                  class="w-6 h-6 "
+                  className="w-6 h-6 "
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
                   viewBox="0 0 24 24"
@@ -85,8 +84,8 @@ function Footer() {
             <h3 className="text-lg font-semibold text-white mb-4">
               Quick Links
             </h3>
-            {navlinks.map((navlink) => (
-              <ul>
+            <ul>
+              {navlinks.map((navlink) => (
                 <li key={navlink.id} className="mb-2">
                   <a
                     href={navlink.href}
@@ -95,8 +94,8 @@ function Footer() {
                     {navlink.name}
                   </a>
                 </li>
-              </ul>
-            ))}
+              ))}
+            </ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">
@@ -146,7 +145,7 @@ function Footer() {
         </div>
         <div className="py-6 border-t border-gray-800 text-center">
           <p className="text-gray-400 text-sm">
-           &copy;{new Date().getFullYear()} FitLife Fitness Center. All rights
+            &copy;{new Date().getFullYear()} FitLife Fitness Center. All rights
             reserved
           </p>
         </div>

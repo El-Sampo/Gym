@@ -150,7 +150,8 @@ function Navbar({ activeSection, setActiveSection }) {
         <div className="px-3 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md shadow-lg border-gray-100 ">
           {/*map method*/}
           {navlinks.map((link) => (
-            <a
+            <a 
+              key={link.href} 
               href={link.href}
               className={`block px-4 pt-2.5 rounded-lg text-base font-medium transition-all duration-300 `}
             >
