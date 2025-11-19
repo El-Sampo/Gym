@@ -1,8 +1,8 @@
 import React from 'react';
 
-import chickenQuinoaImage from "../../Images/Chicken & Quinoa Bowl.jpg"; 
-import salmonPotatoImage from "../../Images/Salmon & Sweet Potato.jpg";
-import lentilSoupImage from "../../Images/Vegetarian Lentil Soup.jpg";
+import chickenQuinoaImage from "../../images/Chicken_Quinoa_Bowl.jpg"; 
+import salmonPotatoImage from "../../images/Salmon_Sweet_Potato.jpg";
+import lentilSoupImage from "../../images/Vegetarian Lentil Soup.jpg";
 
 const mealPlans = [
     {
