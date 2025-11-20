@@ -1,6 +1,6 @@
 import React from "react";
 
-function Home() {
+function Homep() {
   return (
     <div
       id="home"
@@ -127,4 +127,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Homep;
