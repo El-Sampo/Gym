@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { NavLink } from "react-router";
 
 function Navbar({ activeSection, setActiveSection }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,8 +63,8 @@ function Navbar({ activeSection, setActiveSection }) {
           <div className="hidden lg:flex items-center space-x-1">
             {/*map method*/}
             {navlinks.map((link) => (
-              <a
-                href={link.href}
+              <NavLink
+                to={link.href}
                 key={link.id}
                 onClick={() => setActiveSection(link.id) }
                 
@@ -83,7 +84,7 @@ function Navbar({ activeSection, setActiveSection }) {
                     activeSection === link.id ? "scale-x-100" : ""
                   }`}
                 ></span>
-              </a>
+              </NavLink>
             ))}
 
             <a

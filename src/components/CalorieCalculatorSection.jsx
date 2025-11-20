@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router'; 
 import { LineChart, Line, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 
 const calculateCalories = (data) => {
