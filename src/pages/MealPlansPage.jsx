@@ -3,6 +3,7 @@ import React from 'react';
 import chickenQuinoaImage from "../../images/Chicken_Quinoa_Bowl.jpg"; 
 import salmonPotatoImage from "../../images/Salmon_Sweet_Potato.jpg";
 import lentilSoupImage from "../../images/Vegetarian Lentil Soup.jpg";
+import StickyContactChannel from '../components/StickyContactChannel'
 
 const mealPlans = [
     {
@@ -99,6 +100,7 @@ const MealPlansPage = () => {
                     </button>
                 </div>
             </div>
+            <StickyContactChannel />
         </div>
     );
 };

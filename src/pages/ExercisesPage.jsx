@@ -2,6 +2,7 @@ import { useState } from "react";
 import Generator from "../components/excercises/Generator";
 import { generateWorkOut } from "../utils/exercises/functions";
 import WorkOut from "../components/excercises/WorkOut";
+import StickyContactChannel from '../components/StickyContactChannel'
 
 export default function ExercisesPage() {
   const [workout, setWorkout] = useState(null);
@@ -42,6 +43,7 @@ export default function ExercisesPage() {
           </div>
         </section>
       )}
+      <StickyContactChannel />
     </main>
   );
 }

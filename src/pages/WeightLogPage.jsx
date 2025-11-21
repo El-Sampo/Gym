@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import StickyContactChannel from '../components/StickyContactChannel'
 
 const initialWeightData = [
     { name: '2024-09-01', weight: 72 },
@@ -98,6 +99,7 @@ const WeightLogPage = () => {
                     </form>
                 </div>
             </div>
+            <StickyContactChannel />
         </div>
     );
 };

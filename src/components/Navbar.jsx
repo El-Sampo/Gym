@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom"; // Ensure you import NavLink from 'react-router-dom'
 
 function Navbar({ activeSection, setActiveSection }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,6 @@ function Navbar({ activeSection, setActiveSection }) {
     { name: "Pricing", href: "/pricingpage", id: "pricing" },
     { name: "FitnessTracker", href: "/fitnesstracker", id: "fitnesstracker" },
     { name: "Exercises", href: "/exercises", id: "exercises" },
-    { name: "Contact", href: "/contactpage", id: "contact" },
   ];
   return (
     <nav
@@ -66,7 +65,7 @@ function Navbar({ activeSection, setActiveSection }) {
               <NavLink
                 to={link.href}
                 key={link.id}
-                onClick={() => setActiveSection(link.id) }
+                onClick={() => setActiveSection(link.id)}
                 
                 className={`px-3 py-2 mx-1 text-sm font-medium transition-all duration-300 relative group ${
                   activeSection === link.id
@@ -86,9 +85,8 @@ function Navbar({ activeSection, setActiveSection }) {
                 ></span>
               </NavLink>
             ))}
-
-            <a
-              href="#join"
+            <NavLink 
+              to="/contactpage" 
               className={`ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] ${
                 scrolled
                   ? "bg-red-600 text-white hover:bg-red-700 hover-shadow-lg"
@@ -96,7 +94,7 @@ function Navbar({ activeSection, setActiveSection }) {
               }`}
             >
               Join Now
-            </a>
+            </NavLink>
           </div>
 
           {/*Mobile menus btn*/}
@@ -151,17 +149,18 @@ function Navbar({ activeSection, setActiveSection }) {
         <div className="px-3 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md shadow-lg border-gray-100 ">
           {/*map method*/}
           {navlinks.map((link) => (
-            <a 
+            <NavLink 
               key={link.href} 
-              href={link.href}
+              to={link.href} le menu on selection
               className={`block px-4 pt-2.5 rounded-lg text-base font-medium transition-all duration-300 `}
             >
               {link.name}
-            </a>
+            </NavLink>
           ))}
           <div className="pt-2 pb-1 ">
-            <a
-              href="#join"
+            <NavLink 
+              to="/contactpage" 
+              onClick={toggleMenu}
               className={`ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] ${
                 scrolled
                   ? "bg-red-600 text-white hover:bg-red-700 hover-shadow-lg"
@@ -169,7 +168,7 @@ function Navbar({ activeSection, setActiveSection }) {
               }`}
             >
               Join Now
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>

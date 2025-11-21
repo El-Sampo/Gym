@@ -1,4 +1,5 @@
 import React from 'react';
+import StickyContactChannel from '../components/StickyContactChannel'
 
 const WorkoutLogEntry = () => {
     
@@ -23,6 +24,7 @@ const WorkoutsPage = () => {
                     <p className="text-gray-600">Your workout history will appear here.</p>
                 </div>
             </div>
+            <StickyContactChannel />
         </div>
     );
 };
