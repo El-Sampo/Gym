@@ -125,7 +125,10 @@ function Classes() {
           {/* will use Logic */}
           {filteredClasses.map((cls, index) => {
             return (
-              <div key={index} className="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300">
+              <div
+                key={index}
+                className="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300"
+              >
                 <div className="h-56 overflow-hidden">
                   <img
                     src={cls.image}
@@ -169,12 +172,20 @@ function Classes() {
           })}
         </div>
         <div className="text-center mt-12">
-          <a
-            href="#"
-            className="inline-block border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-6 py-3 rounded-md font-medium transition duration-300"
+          <button
+            onClick={() => setActiveCategory("All")}
+            disabled={!activeCategory || activeCategory === "All"}
+            className={`inline-block border-2 px-6 py-3 rounded-md font-medium transition duration-300
+              ${
+                !activeCategory || activeCategory === "All"
+                  ? "border-gray-400 text-gray-400 cursor-not-allowed"
+                  : "border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+              }`}
           >
-            View Full Schedule
-          </a>
+            {!activeCategory || activeCategory === "All"
+              ? "Choose a category"
+              : "View Full Schedule"}
+          </button>
         </div>
       </div>
     </div>

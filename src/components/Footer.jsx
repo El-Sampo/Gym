@@ -2,13 +2,12 @@ import React from "react";
 
 function Footer() {
   const navlinks = [
-    { name: "Home", href: "#home", id: "home" },
-    { name: "About", href: "#about", id: "about" },
-    { name: "Classes", href: "#classes", id: "classes" },
-    { name: "Membership", href: "#membership", id: "membership" },
-    { name: "Trainers", href: "#trainers", id: "trainers" },
-    { name: "Testimonials", href: "#testimonials", id: "testimonials" },
-    { name: "Contact", href: "#contact", id: "contact" },
+    { name: "Home", href: "/", id: "home" },
+    { name: "About", href: "/aboutpage", id: "about" },
+    { name: "Classes", href: "/classespage", id: "classes" },
+    { name: "Pricing", href: "/pricingpage", id: "pricing" },
+    { name: "FitnessTracker", href: "/fitnesstracker", id: "fitnesstracker" },
+    { name: "Exercises", href: "/exercises", id: "exercises" },
   ];
 
   return (
@@ -102,12 +101,12 @@ function Footer() {
               Working Hours
             </h3>
             <ul>
-              <li>Sunday - Friday: 8:00 AM - 12:00 PM</li>
-              <li>Saturday: 8:00 AM - 6:00 PM</li>
+              <li>Sunday: Friday: 8:00 AM to 12:00 PM</li>
+              <li>Saturday: 8:00 AM to 6:00 PM</li>
             </ul>
             <div className="mt-6 ">
               <a
-                href="#"
+                href="/contactpage"
                 className="inline-block bg-red-600 hover:bg-red-700
                 text-white px-4 py-2 rounded-md text-sm font-semibold transition duration-300"
               >

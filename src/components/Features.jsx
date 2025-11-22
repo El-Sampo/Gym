@@ -127,9 +127,9 @@ export default function FeaturesSection() {
             </div>
           </div>
           <div className="flex justify-center w-full">
-            <button className="mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-4 rounded-full transition">
+            <a href="/pricingpage"> <button className="mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-4 rounded-full transition">
               Explore Our Membership Options &rarr;
-            </button>
+            </button></a>
           </div>
         </div>
       </div>

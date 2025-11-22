@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 function Homep() {
   return (
@@ -24,7 +25,7 @@ function Homep() {
           <h1 className="text-white text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6">
             Transform <span className="text-red-500">Your Body</span>
             <br />
-            Transform <span className="text-pink-400">Your Life</span>
+            Transform <span className="text-red-500">Your Life</span>
           </h1>
           <p className="text-white text-base sm:text-lg mb-8 md:mb-10 max-w-xl mx-auto lg:mx-0">
             Join FITELITE and experience premium fitness with state-of-the-art
@@ -32,12 +33,18 @@ function Homep() {
             your success.
           </p>
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 sm:gap-6 mb-8">
-            <button className="bg-red-500 text-white font-semibold px-6 py-3 rounded-full shadow hover:bg-white hover:text-red-500 transition">
-              Explore Classes
-            </button>
-            <button className="bg-transparent border-2 border-white text-white font-semibold px-6 py-3 rounded-full hover:bg-white hover:text-black transition">
-              View Membership
-            </button>
+            <a href="/classespage">
+              {" "}
+              <button className="bg-red-500 text-white font-semibold px-6 py-3 rounded-full shadow hover:bg-white hover:text-red-500 transition">
+                Explore Classes
+              </button>
+            </a>
+            <a href="/pricingpage">
+              {" "}
+              <button className="bg-transparent border-2 border-white text-white font-semibold px-6 py-3 rounded-full hover:bg-white hover:text-black transition">
+                View Membership
+              </button>
+            </a>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
             <div className="flex -space-x-2 mb-2 sm:mb-0">
@@ -110,7 +117,7 @@ function Homep() {
             </ul>
             <div className="mt-6 sm:mt-8 text-center lg:text-left">
               <a
-                href="#features"
+                href="/aboutpage"
                 className="text-red-500 font-medium hover:underline"
               >
                 Discover all features &rarr;
@@ -118,12 +125,6 @@ function Homep() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-10 text-white flex flex-col items-center opacity-80">
-        <span className="text-sm sm:text-base">Scroll to discover</span>
-        <span className="animate-bounce text-2xl sm:text-3xl mt-2">↓</span>
       </div>
     </div>
   );

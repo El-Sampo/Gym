@@ -43,11 +43,7 @@ function Navbar({ activeSection, setActiveSection }) {
         <div className="flex justify-between h-20">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span
-                className={`text-2xl font-extrabold ${
-                  scrolled ? "text-gray-900" : "text-white"
-                }`}
-              >
+              <span className={`text-gray-900 text-2xl font-extrabold `}>
                 FIT<span className="text-red-600">ELITE</span>
               </span>
               <div
@@ -66,16 +62,13 @@ function Navbar({ activeSection, setActiveSection }) {
                 to={link.href}
                 key={link.id}
                 onClick={() => setActiveSection(link.id)}
-                
-                className={`px-3 py-2 mx-1 text-sm font-medium transition-all duration-300 relative group ${
-                  activeSection === link.id
-                    ? scrolled
+                className={`px-3 py-2 mx-1 text-sm font-medium transition-all duration-300 relative group
+                  ${
+                    activeSection === link.id
                       ? "text-red-600"
-                      : "text-white"
-                    : scrolled
-                    ? "text-gray-700 hover:text-red-600"
-                    : "text-gray-200 hover:text-white"
-                } `}
+                      : "text-black hover:text-red-600"
+                  }  
+                `}
               >
                 {link.name}
                 <span
@@ -85,13 +78,9 @@ function Navbar({ activeSection, setActiveSection }) {
                 ></span>
               </NavLink>
             ))}
-            <NavLink 
-              to="/contactpage" 
-              className={`ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] ${
-                scrolled
-                  ? "bg-red-600 text-white hover:bg-red-700 hover-shadow-lg"
-                  : "bg-white text-red-700 hover:bg-gray-100 hover-shadow-lg"
-              }`}
+            <NavLink
+              to="/contactpage"
+              className={`ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] bg-red-600 text-white hover:bg-red-700 hover-shadow-lg`}
             >
               Join Now
             </NavLink>
@@ -100,9 +89,7 @@ function Navbar({ activeSection, setActiveSection }) {
           {/*Mobile menus btn*/}
           <div className="lg:hidden flex items-center">
             <button
-              className={`p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 ${
-                scrolled ? "text-gray-800" : "text-white"
-              }`}
+              className={`p-2 rounded-full outline-none ring-2 ring-inset ring-red-500 text-gray-800 `}
               onClick={toggleMenu}
             >
               <span className="sr-only">
@@ -149,23 +136,26 @@ function Navbar({ activeSection, setActiveSection }) {
         <div className="px-3 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md shadow-lg border-gray-100 ">
           {/*map method*/}
           {navlinks.map((link) => (
-            <NavLink 
-              key={link.href} 
-              to={link.href} le menu on selection
-              className={`block px-4 pt-2.5 rounded-lg text-base font-medium transition-all duration-300 `}
+            <NavLink
+              key={link.href}
+              to={link.href}
+              le
+              menu
+              on
+              selection
+              className={`block px-4 pt-2.5 rounded-lg text-base font-medium 
+                          transition-all duration-300 
+                          hover:text-red-600
+                        `}
             >
               {link.name}
             </NavLink>
           ))}
           <div className="pt-2 pb-1 ">
-            <NavLink 
-              to="/contactpage" 
+            <NavLink
+              to="/contactpage"
               onClick={toggleMenu}
-              className={`ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] ${
-                scrolled
-                  ? "bg-red-600 text-white hover:bg-red-700 hover-shadow-lg"
-                  : "bg-white text-red-700 hover:bg-gray-100 hover-shadow-lg"
-              }`}
+              className={`ml-3 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] bg-red-600 text-white hover:bg-red-700 hover-shadow-lg`}
             >
               Join Now
             </NavLink>

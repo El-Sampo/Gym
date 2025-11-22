@@ -132,7 +132,7 @@ function Pricing() {
             requirements
           </p>
           <a
-            href="#contact"
+            href="/contactpage"
             className="inline-block bg-gray-800 text-white hover:bg-gray-700 px-6 py-3 rounded-md font-medium transition-all duration-300"
           >
             Contact
