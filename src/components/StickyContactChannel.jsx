@@ -7,24 +7,25 @@ const CONTACT_CHANNELS = [
     name: "WhatsApp", 
     icon: FaWhatsapp, 
     href: "https://wa.me/1234567890", 
-    color: "bg-green-500 hover:bg-green-600",
+    color: "bg-black hover:bg-gray-800", // changed
     tooltip: "Chat with us on WhatsApp"
   },
   { 
     name: "Facebook", 
     icon: FaFacebookF, 
     href: "https://facebook.com/yourpagename", 
-    color: "bg-blue-500 hover:bg-blue-600",
+    color: "bg-black hover:bg-gray-800", // changed
     tooltip: "Find us on Facebook"
   },
   { 
     name: "Phone", 
     icon: Phone, 
     href: "tel:+1234567890", 
-    color: "bg-pink-500 hover:bg-pink-600",
+    color: "bg-black hover:bg-gray-800", // changed
     tooltip: "Call us now"
   }
 ];
+
 
 const StickyContactButton = ({ icon: Icon, href, color, tooltip }) => (
   <a

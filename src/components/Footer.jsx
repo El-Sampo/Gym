@@ -1,15 +1,13 @@
 import React from "react";
 
-
 function Footer() {
   const navlinks = [
-    { name: "Home", href: "#home", id: "home" },
-    { name: "About", href: "#about", id: "about" },
-    { name: "Classes", href: "#classes", id: "classes" },
-    { name: "Membership", href: "#membership", id: "membership" },
-    { name: "Trainers", href: "#trainers", id: "trainers" },
-    { name: "Testimonials", href: "#testimonials", id: "testimonials" },
-    { name: "Contact", href: "#contact", id: "contact" },
+    { name: "Home", href: "/", id: "home" },
+    { name: "About", href: "/aboutpage", id: "about" },
+    { name: "Classes", href: "/classespage", id: "classes" },
+    { name: "Pricing", href: "/pricingpage", id: "pricing" },
+    { name: "FitnessTracker", href: "/fitnesstracker", id: "fitnesstracker" },
+    { name: "Exercises", href: "/exercises", id: "exercises" },
   ];
 
   return (
@@ -29,7 +27,7 @@ function Footer() {
                 className="text-gray-400  hover:text-white transition duration-300"
               >
                 <svg
-                  class="w-6 h-6 "
+                  className="w-6 h-6 "
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
                   viewBox="0 0 24 24"
@@ -85,8 +83,8 @@ function Footer() {
             <h3 className="text-lg font-semibold text-white mb-4">
               Quick Links
             </h3>
-            {navlinks.map((navlink) => (
-              <ul>
+            <ul>
+              {navlinks.map((navlink) => (
                 <li key={navlink.id} className="mb-2">
                   <a
                     href={navlink.href}
@@ -95,20 +93,20 @@ function Footer() {
                     {navlink.name}
                   </a>
                 </li>
-              </ul>
-            ))}
+              ))}
+            </ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">
               Working Hours
             </h3>
             <ul>
-              <li>Sunday - Friday: 8:00 AM - 12:00 PM</li>
-              <li>Saturday: 8:00 AM - 6:00 PM</li>
+              <li>Sunday: Friday: 8:00 AM to 12:00 PM</li>
+              <li>Saturday: 8:00 AM to 6:00 PM</li>
             </ul>
             <div className="mt-6 ">
               <a
-                href="#"
+                href="/contactpage"
                 className="inline-block bg-red-600 hover:bg-red-700
                 text-white px-4 py-2 rounded-md text-sm font-semibold transition duration-300"
               >
@@ -146,7 +144,7 @@ function Footer() {
         </div>
         <div className="py-6 border-t border-gray-800 text-center">
           <p className="text-gray-400 text-sm">
-           &copy;{new Date().getFullYear()} FitLife Fitness Center. All rights
+            &copy;{new Date().getFullYear()} FitLife Fitness Center. All rights
             reserved
           </p>
         </div>

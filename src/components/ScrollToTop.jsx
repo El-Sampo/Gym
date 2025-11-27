@@ -25,7 +25,7 @@ function ScrollToTop() {
     <>
       {isVisible && (
         <button
-          className="fixed bottom-6 right-6 rounded-full bg-red-600 text-white shadow-lg hover:bg-red-700 transtion duration-300 z-50"
+          className="fixed bottom-6 left-6 rounded-full bg-red-600 text-white shadow-lg hover:bg-red-700 transtion duration-300 z-50"
           onClick={scrollToTop}
         >
           <svg

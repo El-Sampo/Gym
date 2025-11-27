@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route } from "react-router"; 
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import AboutPage from "./pages/AboutPage";
@@ -9,100 +9,87 @@ import FitnessTracker from "./pages/FitnessTracker";
 import ContactPage from "./pages/ContactPage";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+
+ 
+import WorkoutsPage from "./pages/WorkoutsPage"; 
+import MealPlansPage from "./pages/MealPlansPage"; 
+import ExercisesPage from "./pages/ExercisesPage";
+
 function App() {
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("home");
 
-  const sections = [
-    "#home",
-    "#features",
-    "#about",
-    "#classes",
-    "#pricing",
-    "#trainers",
-    "#testimonials",
-    "#contact",
-  ];
+  const sections = [
+    "#home",
+    "#features",
+    "#about",
+    "#classes",
+    "#pricing",
+    "#trainers",
+    "#testimonials",
+    "#contact",
+  ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const reveals = document.querySelectorAll(".reveal");
-      for (let i = 0; i < reveals.length; i++) {
-        const windowHeight = window.innerHeight;
-        const revealTop = reveals[i].getBoundingClientRect().top;
-        const revealPoint = 150;
-        if (revealTop < windowHeight - revealPoint) {
-          reveals[i].classList.add("active");
-        }
-      }
-    };
+  useEffect(() => {
+    const handleScroll = () => {
+      const reveals = document.querySelectorAll(".reveal");
+      for (let i = 0; i < reveals.length; i++) {
+        const windowHeight = window.innerHeight;
+        const revealTop = reveals[i].getBoundingClientRect().top;
+        const revealPoint = 150;
+        if (revealTop < windowHeight - revealPoint) {
+          reveals[i].classList.add("active");
+        }
+      }
 
-    const ScrollPosition = window.scrollY;
+      const ScrollPosition = window.scrollY;
+      let currentActiveSection = activeSection;
 
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const section = document.getElementById(sections[i]);
-      if (section && ScrollPosition >= section.offsetTop - 200) {
-        setActiveSection(sections[i]);
-        break;
-      }
-    }
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i].substring(1));
+        if (section && ScrollPosition >= section.offsetTop - 200) {
+          currentActiveSection = sections[i];
+          break;
+        }
+      }
+      
+      if (currentActiveSection !== activeSection) {
+        setActiveSection(currentActiveSection);
+      }
+    };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [activeSection, sections]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const reveals = document.querySelectorAll(".reveal");
-      for (let i = 0; i < reveals.length; i++) {
-        const windowHeight = window.innerHeight;
-        const revealTop = reveals[i].getBoundingClientRect().top;
-        const revealPoint = 150;
-        if (revealTop < windowHeight - revealPoint) {
-          reveals[i].classList.add("active");
-        }
-      }
-    };
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+      />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/aboutpage" element={<AboutPage />} />
+          <Route path="/classespage" element={<ClassesPage />} />
+          <Route path="/pricingpage" element={<PricingPage />} />
+          <Route path="/fitnesstracker" element={<FitnessTracker />} />
+          <Route path="/contactpage" element={<ContactPage />} />
+          
+          
+          <Route path="/workouts" element={<WorkoutsPage />} />
+          <Route path="/meal-plans" element={<MealPlansPage />} /> 
+          <Route path="/exercises" element={<ExercisesPage />} />
 
-    const ScrollPosition = window.scrollY;
-
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const section = document.getElementById(sections[i]);
-      if (section && ScrollPosition >= section.offsetTop - 200) {
-        setActiveSection(sections[i]);
-        break;
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [activeSection]);
-
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar
-        activeSection={activeSection}
-        setActiveSection={setActiveSection}
-      />
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/aboutpage" element={<AboutPage />} />
-          <Route path="/classespage" element={<ClassesPage />} />
-          <Route path="/pricingpage" element={<PricingPage />} />
-          <Route path="/fitnesstracker" element={<FitnessTracker />} />
-          <Route path="/contactpage" element={<ContactPage />} />
-        </Routes>
-      </main>
-      <Footer />
-      <ScrollToTop />
-    </div>
-  );
+        </Routes>
+      </main>
+      <Footer />
+      <ScrollToTop />
+    </div>
+  );
 }
 
 export default App;

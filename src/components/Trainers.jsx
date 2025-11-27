@@ -145,10 +145,10 @@ function Trainers() {
         {/* Book a Training Session Button */}
         <div className="text-center mt-10">
           <a
-            href="#contact"
+            href="/classespage"
             className="inline-block border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-6 py-2 rounded-md font-medium transition duration-300"
           >
-            Book a Training Session
+            View Training classes
           </a>
         </div>
       </div>

@@ -41,7 +41,7 @@ function About() {
 </div>
 
 <a
-  href="#contact"
+  href="/contactpage"
   className="inline-flex bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md font-medium transition duration-300">
   Learn More
 </a>
