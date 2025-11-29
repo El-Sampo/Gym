@@ -1,30 +1,30 @@
 import React from "react";
 import StickyContactChannel from "../components/StickyContactChannel";
 
-import grilledChickenImg from "../../images/Grilled Chicken & Asparagus.jpg";
-import salmonSweetPotatoMashImg from "../../images/Salmon & Sweet Potato Mash.jpg";
+import grilledChickenImg from "../../images/Grilled Chicken Asparagus.jpg";
+import salmonSweetPotatoMashImg from "../../images/Salmon Sweet Potato Mash.jpg";
 import beefStirFryImg from "../../images/Beef Stir-Fry with Brown Rice.jpg";
 import tunaWrapsImg from "../../images/Tuna Salad Lettuce Wraps.jpg";
-import turkeyZoodlesImg from "../../images/rkey Meatballs & Zucchini Noodles.jpg";
+import turkeyZoodlesImg from "../../images/rkey Meatballs Zucchini Noodles.jpg";
 import omeletAvocadoImg from "../../images/Egg White Omelet with Avocado.jpg";
 import lentilSoupImg from "../../images/Lentil Soup.jpg";
-import chickenQuinoaBowlImg from "../../images/Chicken & Quinoa Bowl.jpg";
-import shrimpSkewersImg from "../../images/Shrimp & Vegetable Skewers.jpg";
+import chickenQuinoaBowlImg from "../../images/Chicken Quinoa Bowl.jpg";
+import shrimpSkewersImg from "../../images/Shrimp Vegetable Skewers.jpg";
 import overnightOatsImg from "../../images/Overnight Oats with Berries.jpg";
 import tofuScrambleImg from "../../images/Tofu Scramble.jpg";
 import blackBeanBurgerImg from "../../images/Black Bean Burgers.jpg";
 import vegetarianChiliImg from "../../images/Vegetarian Chili.jpg";
-import hummusSandwichImg from "../../images/Hummus & Veggie Sandwich.jpg";
+import hummusSandwichImg from "../../images/Hummus Veggie Sandwich.jpg";
 import mediterraneanQuinoaSaladImg from "../../images/Mediterranean Quinoa Salad.jpg";
-import greekYogurtImg from "../../images/Greek Yogurt with Walnuts & Honey.jpg";
-import cottagePineappleImg from "../../images/Cottage Cheese & Pineapple.jpg";
-import hardBoiledEggsAppleImg from "../../images/Hard-Boiled Eggs & Apple.jpg";
+import greekYogurtImg from "../../images/Greek Yogurt with Walnuts Honey.jpg";
+import cottagePineappleImg from "../../images/Cottage Cheese Pineapple.jpg";
+import hardBoiledEggsAppleImg from "../../images/Hard-Boiled Eggs Apple.jpg";
 import edamamePodsImg from "../../images/Edamame Pods.jpg";
 import chickenTikkaImg from "../../images/Chicken Tikka Skewers.jpg";
 import shepherdPieImg from "../../images/Shepherd's Pie with Cauliflower Topping.jpg";
 import breakfastSmoothieImg from "../../images/Breakfast Smoothie.jpg";
 import pancakesImg from "../../images/Pancakes.jpg";
-import leanBeefGreenBeansImg from "../../images/Grilled Lean Beef Steak & Green Beans.jpg";
+import leanBeefGreenBeansImg from "../../images/Grilled Lean Beef Steak Green Beans.jpg";
 
 const newMealPlansData = [
   {

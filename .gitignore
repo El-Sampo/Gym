@@ -23,4 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 
-images
+# Logs
+logs
+*.log
+npm-debug.log*
+...
+
+# Editor directories and files
+.vscode/*
+.idea
+.DS_Store
+...
+
