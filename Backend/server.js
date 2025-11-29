@@ -17,6 +17,10 @@ mongoose
 
 app.use("/api/user", userRoutes);
 
-app.listen(process.env.PORT, () =>
-  console.log("Server running on port", process.env.PORT)
-);
+app.get("/", (req, res) => {
+  res.send("API is working");
+});
+
+app.listen(process.env.PORT, () => {
+  console.log("Server running on port", process.env.PORT);
+});
