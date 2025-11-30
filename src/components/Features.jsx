@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import elitePersonalTraining from "../../images/Elite Personal Training.jpg";
 
 const features = [
   {
@@ -23,7 +24,7 @@ const features = [
       "Our certified trainers bring expertise and personalized attention to help you achieve...",
     details:
       "Elite Personal Training\nOur certified trainers bring expertise and personalized attention to help you achieve your goals, with customized workouts and ongoing motivation.",
-    image: "/images/Elite Personal Training.jpg",
+      image: elitePersonalTraining,
   },
   {
     title: "Luxury Amenities",
