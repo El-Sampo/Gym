@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import elitePersonalTraining from "../../images/Elite Personal Training.jpg";
+import luxuryAmenities from "../../images/Luxury Amenities.jpg";
+import fitnessAppIntegration from "../../images/Fitness App Integration.jpg";
+import customizedPrograms from "../../images/Customized Programs.jpg";
+import Accessible from "../../images/Accessible.jpg";
+
+
+// Luxury Amenities Customized Programs Fitness App Integration
 
 const features = [
   {
@@ -16,7 +23,7 @@ const features = [
       "Your fitness journey doesn’t stop when the sun sets. Enjoy unlimited access to our...",
     details:
       "Accessible 24/7\nYour fitness journey doesn’t stop when the sun sets. Enjoy unlimited access to our facilities.",
-    image: "/images/Accessible.jpg",
+    image: Accessible,
   },
   {
     title: "Elite Personal Training",
@@ -32,7 +39,7 @@ const features = [
       "Enjoy premium amenities including spa-quality changing rooms, towel service...",
     details:
       "Luxury Amenities\nEnjoy premium amenities including spa-quality changing rooms, towel service, and more.",
-    image: "/images/Luxury Amenities.jpg",
+    image: luxuryAmenities,
   },
   {
     title: "Customized Programs",
@@ -40,7 +47,7 @@ const features = [
       "Achieve your specific fitness goals with our tailored programs that adapt to your...",
     details:
       "Customized Programs\nAchieve your specific fitness goals with our tailored programs that adapt to your needs.",
-    image: "/images/Customized Programs.jpg",
+    image: customizedPrograms,
   },
   {
     title: "Fitness App Integration",
@@ -48,7 +55,7 @@ const features = [
       "Track your progress, book classes, and connect with trainers through our dedicated app...",
     details:
       "Fitness App Integration\nTrack your progress, book classes, and connect with trainers through our dedicated app.",
-    image: "/images/Fitness App Integration.jpg",
+    image: fitnessAppIntegration,
   },
 ];
 
