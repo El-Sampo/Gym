@@ -4,7 +4,7 @@ import luxuryAmenities from "../../images/Luxury Amenities.jpg";
 import fitnessAppIntegration from "../../images/Fitness App Integration.jpg";
 import customizedPrograms from "../../images/Customized Programs.jpg";
 import Accessible from "../../images/Accessible.jpg";
-
+import cuttingEdgeEquipment from "../../images/Cutting-Edge Equipment.jpg";
 
 // Luxury Amenities Customized Programs Fitness App Integration
 
@@ -15,7 +15,7 @@ const features = [
       "Experience premium fitness with state-of-the-art equipment featuring the latest technology...",
     details:
       "Elite Personal Training\nOur certified trainers bring expertise and personalized attention to help you achieve your goals, with customized workouts and ongoing motivation.",
-    image: "/images/Cutting-Edge Equipment.jpg",
+    image:cuttingEdgeEquipment ,
   },
   {
     title: "Accessible 24/7",
