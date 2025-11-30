@@ -601,18 +601,7 @@ const MealPlansPage = () => {
           ))}
         </div>
 
-        <div className="mt-16 p-8 bg-white rounded-xl shadow-lg border-t-4 border-green-500 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Want a Custom Plan?
-          </h3>
-          <p className="text-gray-600 mb-5">
-            Create your own meal plan tailored to your exact caloric and macro
-            needs.
-          </p>
-          <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full transition duration-200 shadow-md shadow-green-500/50">
-            Create New Custom Plan
-          </button>
-        </div>
+
       </div>
       <StickyContactChannel />
     </div>
