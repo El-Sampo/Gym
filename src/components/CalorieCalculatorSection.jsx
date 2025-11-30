@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
-
-const API_URL = "http://localhost:5000/api/user";
+import { LineChart, Line, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
+import AuthModal from './AuthModal';
 
 const DEFAULT_FORM = {
   age: 30,
@@ -122,141 +122,84 @@ const MacroGoal = ({ title, current, goal, color }) => {
   );
 };
 
-const CalorieCalculatorSection = () => {
+const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentUser }) => {
   const [formData, setFormData] = useState(DEFAULT_FORM);
   const [results, setResults] = useState(null);
   const [bmiStatus, setBmiStatus] = useState(null);
-
-  const [waterTarget, setWaterTarget] = useState(2000);
-
-  const [macroTargets, setMacroTargets] = useState(null);
-  const [macroCurrent, setMacroCurrent] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [weightEntries, setWeightEntries] = useState([]);
+  const [loadingWeights, setLoadingWeights] = useState(false);
+  const [showMealPlanLoginMessage, setShowMealPlanLoginMessage] = useState(false);
 
+  // Auth state
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  
+  // Use parent's currentUser to determine authentication status
+  const isAuthenticated = !!currentUser;
+  const user = currentUser;
+
+  // Calculate macro targets when results change
+  const macroTargets = results ? {
+    protein: Math.round((results.target * 0.3) / 4),
+    carbs: Math.round((results.target * 0.45) / 4),
+    fats: Math.round((results.target * 0.25) / 9),
+  } : null;
+
+  // Calculate water target based on weight
+  const waterTarget = Math.max(2000, Number(formData.weight || 0) * 33);
+
+  // Auth success handler - passes to parent (App.jsx)
+  const handleAuthSuccess = (userData) => {
+    setIsAuthModalOpen(false);
+    
+    if (parentOnAuthSuccess) {
+      parentOnAuthSuccess(userData);
+    }
+  };
+
+  // Fetch weight entries when user is authenticated
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
+    if (isAuthenticated) {
+      fetchWeightEntries();
+    }
+  }, [isAuthenticated]);
 
-        if (data) {
-          const loadedForm = {
-            age: data.age ?? DEFAULT_FORM.age,
-            gender: data.gender ?? DEFAULT_FORM.gender,
-            height: data.height ?? DEFAULT_FORM.height,
-            weight: data.weight ?? DEFAULT_FORM.weight,
-            activityLevel: data.activityLevel ?? DEFAULT_FORM.activityLevel,
-            goal: data.goal ?? DEFAULT_FORM.goal,
-          };
-          setFormData(loadedForm);
-
-          const baseResults =
-            data.caloriesTarget && data.caloriesTarget > 0
-              ? { maintenance: 0, target: data.caloriesTarget }
-              : calculateCalories(loadedForm);
-          setResults(baseResults);
-
-          setBmiStatus(getWeightStatus(loadedForm.weight, loadedForm.height));
-
-          const targetWater =
-            data.waterTarget ?? Math.max(2000, loadedForm.weight * 33);
-          setWaterTarget(targetWater);
-
-          const macros =
-            data.proteinTarget && data.carbsTarget && data.fatsTarget
-              ? {
-                  protein: data.proteinTarget,
-                  carbs: data.carbsTarget,
-                  fats: data.fatsTarget,
-                }
-              : null;
-          setMacroTargets(macros);
-          if (macros) {
-            setMacroCurrent({
-              protein: Math.round(macros.protein * 0.57),
-              carbs: Math.round(macros.carbs * 0.72),
-              fats: Math.round(macros.fats * 0.75),
-            });
-          }
-        } else {
-          const baseResults = calculateCalories(DEFAULT_FORM);
-          setResults(baseResults);
-          setBmiStatus(getWeightStatus(DEFAULT_FORM.weight, DEFAULT_FORM.height));
-          setWaterTarget(Math.max(2000, DEFAULT_FORM.weight * 33));
+  const fetchWeightEntries = async () => {
+    setLoadingWeights(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/weight-entries', {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      } catch {
-        const baseResults = calculateCalories(DEFAULT_FORM);
-        setResults(baseResults);
-        setBmiStatus(getWeightStatus(DEFAULT_FORM.weight, DEFAULT_FORM.height));
-        setWaterTarget(Math.max(2000, DEFAULT_FORM.weight * 33));
-      } finally {
-        setLoading(false);
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Get last 4 entries for the chart
+        const last4 = data.entries.slice(0, 4).reverse();
+        
+        // Format for the chart
+        const formatted = last4.map((entry, index) => ({
+          name: new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          weight: entry.weight
+        }));
+        
+        setWeightEntries(formatted);
       }
-    };
-
-    loadUser();
-  }, []);
-
-  useEffect(() => {
-    if (!results) return;
-
-    const newWaterTarget = Math.max(2000, Number(formData.weight || 0) * 33);
-    setWaterTarget(newWaterTarget);
-
-    const newMacroTargets = {
-      protein: Math.round((results.target * 0.3) / 4),
-      carbs: Math.round((results.target * 0.45) / 4),
-      fats: Math.round((results.target * 0.25) / 9),
-    };
-    setMacroTargets(newMacroTargets);
-
-    setMacroCurrent({
-      protein: Math.round(newMacroTargets.protein * 0.57),
-      carbs: Math.round(newMacroTargets.carbs * 0.72),
-      fats: Math.round(newMacroTargets.fats * 0.75),
-    });
-  }, [results, formData.weight]);
-
-  useEffect(() => {
-    if (loading || !results || !macroTargets) return;
-
-    const saveUser = async () => {
-      try {
-        const body = {
-          age: Number(formData.age),
-          gender: formData.gender,
-          height: Number(formData.height),
-          weight: Number(formData.weight),
-          activityLevel: formData.activityLevel,
-          goal: formData.goal,
-          caloriesTarget: results.target,
-          waterTarget,
-          waterIntake: waterTarget, // we treat goal as consumed for the dashboard
-          proteinTarget: macroTargets.protein,
-          carbsTarget: macroTargets.carbs,
-          fatsTarget: macroTargets.fats,
-        };
-
-        await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch {
-        // ignore errors silently for now
-      }
-    };
-
-    saveUser();
-  }, [formData, results, waterTarget, macroTargets, loading]);
+    } catch (error) {
+      console.error('Error fetching weight entries:', error);
+    } finally {
+      setLoadingWeights(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
 
     setFormData((prev) => {
       if (id === "age" || id === "height" || id === "weight") {
-        // allow empty string while typing
         if (value === "") return { ...prev, [id]: "" };
         const numeric = Math.max(0, Number(value));
         return { ...prev, [id]: numeric };
@@ -269,6 +212,13 @@ const CalorieCalculatorSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Check authentication first
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
     const { age, height, weight } = formData;
 
     if (!age || !height || !weight) {
@@ -281,233 +231,345 @@ const CalorieCalculatorSection = () => {
     setBmiStatus(getWeightStatus(weight, height));
   };
 
-  const waterProgress = 100; // bar is full because it represents the daily goal
+  const handleLogWeightClick = (e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      setIsAuthModalOpen(true);
+    }
+  };
 
-  if (loading || !results) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <p className="text-center text-gray-600 text-lg">Loading tracker...</p>
-      </div>
-    );
-  }
+  const handleMealPlanClick = (e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      setShowMealPlanLoginMessage(true);
+      setIsAuthModalOpen(true);
+      
+      // Hide message after 3 seconds
+      setTimeout(() => {
+        setShowMealPlanLoginMessage(false);
+      }, 3000);
+    }
+  };
+
+  const waterProgress = 100; // Full bar for visual purposes
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* LEFT: Calorie calculator – old layout with slight polish */}
-        <div className="bg-slate-900 p-8 rounded-2xl shadow-2xl border-t-4 border-red-600">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6 text-center md:text-left">
-            Daily Calorie Calculator
-          </h2>
+    <>
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+      />
 
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                label="Age"
-                id="age"
-                value={formData.age}
-                onChange={handleChange}
-              />
-              <FormField
-                label="Gender"
-                id="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                options={[
-                  { value: "female", label: "Female" },
-                  { value: "male", label: "Male" },
-                ]}
-              />
-
-              <FormField
-                label="Height (cm)"
-                id="height"
-                value={formData.height}
-                onChange={handleChange}
-              />
-              <FormField
-                label="Weight (kg)"
-                id="weight"
-                value={formData.weight}
-                onChange={handleChange}
-              />
-
-              <div className="sm:col-span-2">
-                <FormField
-                  label="Activity Level"
-                  id="activityLevel"
-                  value={formData.activityLevel}
-                  onChange={handleChange}
-                  options={[
-                    { value: "moderate", label: "Moderate (3-5 days/week)" },
-                    { value: "light", label: "Light (1-2 days/week)" },
-                    { value: "very", label: "Very Active (6-7 days/week)" },
-                    { value: "sedentary", label: "Sedentary" },
-                    { value: "extra", label: "Extra Active" },
-                  ]}
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <FormField
-                  label="Your Goal"
-                  id="goal"
-                  value={formData.goal}
-                  onChange={handleChange}
-                  options={[
-                    { value: "maintenance", label: "Maintain Weight" },
-                    { value: "loss", label: "Aggressive Loss (-500 kcal)" },
-                    { value: "mild-loss", label: "Mild Loss (-300 kcal)" },
-                    { value: "gain", label: "Aggressive Gain (+500 kcal)" },
-                    { value: "mild-gain", label: "Mild Gain (+300 kcal)" },
-                  ]}
-                />
-              </div>
-            </div>
-
-            {error && (
-              <p className="mt-3 text-sm text-center text-red-400 bg-red-900/40 px-3 py-2 rounded-lg">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="w-full mt-5 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-lg tracking-wide shadow-lg shadow-red-500/40 transition"
-            >
-              CALCULATE
-            </button>
-          </form>
-
-          {results && (
-            <div className="mt-6 p-4 bg-slate-950 rounded-xl border border-slate-700 shadow-inner">
-              <p className="text-sm text-slate-300 mb-1">Target Calories:</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold text-red-500">
-                {results.target}{" "}
-                <span className="text-white text-2xl font-semibold">
-                  kcal/Day
-                </span>
-              </h3>
-            </div>
-          )}
-        </div>
-
-        {/* MIDDLE: nutrition & water – stays as your new design */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 space-y-4">
-          <h2 className="text-2xl font-bold text-gray-900 border-b pb-2">
-            Daily Nutrition Status (Food & Water)
-          </h2>
-
-          {macroTargets && macroCurrent && (
-            <>
-              <MacroGoal
-                title="Protein"
-                current={macroCurrent.protein}
-                goal={macroTargets.protein}
-                color="#EF4444"
-              />
-              <MacroGoal
-                title="Carbs"
-                current={macroCurrent.carbs}
-                goal={macroTargets.carbs}
-                color="#F59E0B"
-              />
-              <MacroGoal
-                title="Fats"
-                current={macroCurrent.fats}
-                goal={macroTargets.fats}
-                color="#3B82F6"
-              />
-            </>
-          )}
-
-          <div className="pt-4 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">Meal Plans</h3>
-            <p className="text-sm text-gray-600 mb-3">
-              Browse structured meal options with calories and full recipes.
-            </p>
-            <Link
-              to="/meal-plans"
-              className="inline-block w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50"
-            >
-              View All Meal Plans
-            </Link>
-          </div>
-
-          <div className="pt-4 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900">Water Intake</h3>
-
-            <div className="flex items-baseline justify-between mt-2">
-              <span className="text-3xl font-extrabold text-blue-600">
-                {(waterTarget / 1000).toFixed(1)}L
-              </span>
-            </div>
-
-            <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
-              <div
-                className="h-3 rounded-full bg-blue-500 transition-all duration-500"
-                style={{ width: `${waterProgress}%` }}
-              ></div>
-            </div>
-
-            <p className="text-sm text-gray-700 mt-1">
-              Goal:{" "}
-              <span className="font-bold">
-                {(waterTarget / 1000).toFixed(1)}L
-              </span>{" "}
-              (Based on your weight)
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        {/* Welcome message for authenticated users */}
+        {isAuthenticated && user && (
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+            <p className="text-green-800 font-medium text-center">
+              Welcome back, {user.name}! 👋 Track your fitness journey below.
             </p>
           </div>
-        </div>
+        )}
 
-        {/* RIGHT: weight status + workout suggestion */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900 border-b pb-2">
-            Progress & Goals (Workouts)
-          </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* LEFT: Calorie calculator */}
+          <div className="bg-slate-900 p-8 rounded-2xl shadow-2xl border-t-4 border-red-600">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6 text-center md:text-left">
+              Daily Calorie Calculator
+            </h2>
 
-          <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-500">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Your Weight Status
-            </h3>
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  label="Age"
+                  id="age"
+                  value={formData.age}
+                  onChange={handleChange}
+                />
+                <FormField
+                  label="Gender"
+                  id="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  options={[
+                    { value: "female", label: "Female" },
+                    { value: "male", label: "Male" },
+                  ]}
+                />
 
-            {bmiStatus ? (
-              <>
-                <p className="text-sm text-gray-600">BMI: {bmiStatus.bmi}</p>
-                <p className={`text-xl font-extrabold ${bmiStatus.color}`}>
-                  {bmiStatus.status}
+                <FormField
+                  label="Height (cm)"
+                  id="height"
+                  value={formData.height}
+                  onChange={handleChange}
+                />
+                <FormField
+                  label="Weight (kg)"
+                  id="weight"
+                  value={formData.weight}
+                  onChange={handleChange}
+                />
+
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Activity Level"
+                    id="activityLevel"
+                    value={formData.activityLevel}
+                    onChange={handleChange}
+                    options={[
+                      { value: "moderate", label: "Moderate (3-5 days/week)" },
+                      { value: "light", label: "Light (1-2 days/week)" },
+                      { value: "very", label: "Very Active (6-7 days/week)" },
+                      { value: "sedentary", label: "Sedentary" },
+                      { value: "extra", label: "Extra Active" },
+                    ]}
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Your Goal"
+                    id="goal"
+                    value={formData.goal}
+                    onChange={handleChange}
+                    options={[
+                      { value: "maintenance", label: "Maintain Weight" },
+                      { value: "loss", label: "Aggressive Loss (-500 kcal)" },
+                      { value: "mild-loss", label: "Mild Loss (-300 kcal)" },
+                      { value: "gain", label: "Aggressive Gain (+500 kcal)" },
+                      { value: "mild-gain", label: "Mild Gain (+300 kcal)" },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <p className="mt-3 text-sm text-center text-red-400 bg-red-900/40 px-3 py-2 rounded-lg">
+                  {error}
                 </p>
-              </>
-            ) : (
-              <p className="text-gray-600">
-                Enter your data to calculate BMI.
-              </p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full mt-5 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-lg tracking-wide shadow-lg shadow-red-500/40 transition"
+              >
+                {isAuthenticated ? 'CALCULATE' : 'LOGIN TO CALCULATE'}
+              </button>
+            </form>
+
+            {results && (
+              <div className="mt-6 p-4 bg-slate-950 rounded-xl border border-slate-700 shadow-inner">
+                <p className="text-sm text-slate-300 mb-1">Target Calories:</p>
+                <h3 className="text-3xl md:text-4xl font-extrabold text-red-500">
+                  {results.target}{" "}
+                  <span className="text-white text-2xl font-semibold">
+                    kcal/Day
+                  </span>
+                </h3>
+              </div>
             )}
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-lg border">
-            <h3 className="text-lg font-bold text-gray-900">
-              Workout Plan Suggestion
-            </h3>
-            <p className="text-gray-600 mt-2">
-              Maintain 3-5 strength sessions per week with progressive overload.
-            </p>
+          {/* MIDDLE: nutrition & water */}
+          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 space-y-4">
+            <h2 className="text-2xl font-bold text-gray-900 border-b pb-2">
+              Daily Nutrition Status (Food & Water)
+            </h2>
 
-            <div className="bg-red-100 p-3 rounded-lg flex justify-between text-sm text-red-700 mt-3">
-              <span>Last: Full Body Strength</span>
-              <span>Duration: 60 mins</span>
+            {/* Daily Macro Goals - Shows after calculation */}
+            {macroTargets ? (
+              <div className="bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-lg border border-red-200">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">Your Daily Macro Goals</h3>
+                <p className="text-xs text-gray-600 mb-3">Based on your {results.target} kcal target</p>
+                
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-sm font-medium text-gray-900 mb-1">
+                      <span>Protein</span>
+                      <span className="text-red-600 font-bold">{macroTargets.protein}g</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className="h-2.5 rounded-full bg-red-500"
+                        style={{ width: '100%' }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-sm font-medium text-gray-900 mb-1">
+                      <span>Carbs</span>
+                      <span className="text-yellow-600 font-bold">{macroTargets.carbs}g</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className="h-2.5 rounded-full bg-yellow-500"
+                        style={{ width: '100%' }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-sm font-medium text-gray-900 mb-1">
+                      <span>Fats</span>
+                      <span className="text-blue-600 font-bold">{macroTargets.fats}g</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className="h-2.5 rounded-full bg-blue-500"
+                        style={{ width: '100%' }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-500 mt-3 text-center italic">
+                  Aim to meet these goals daily for optimal results
+                </p>
+              </div>
+            ) : (
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p className="text-gray-600 text-sm text-center">
+                  Press <span className="font-bold text-red-600">CALCULATE</span> to see your personalized macro goals
+                </p>
+              </div>
+            )}
+
+            <div className="pt-4 border-t border-gray-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Meal Plans</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Browse structured meal options with calories and full recipes.
+              </p>
+              {isAuthenticated ? (
+                <Link
+                  to="/meal-plans"
+                  className="inline-block w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50 transition"
+                >
+                  View All Meal Plans
+                </Link>
+              ) : (
+                <div>
+                  <button
+                    onClick={handleMealPlanClick}
+                    className="w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50 transition"
+                  >
+                    View All Meal Plans
+                  </button>
+                  {showMealPlanLoginMessage && (
+                    <p className="text-red-600 text-sm font-semibold mt-2 text-center animate-pulse">
+                      ⚠️ Please Login to access Meal Plans
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
-            <Link
-              to="/workouts"
-              className="mt-4 w-full block text-center border border-gray-400 py-2 rounded-lg hover:bg-gray-100"
-            >
-              View / Log Workouts
-            </Link>
+            <div className="pt-4 border-t border-gray-200">
+              <h3 className="text-lg font-bold text-gray-900">Water Intake</h3>
+
+              <div className="flex items-baseline justify-between mt-2">
+                <span className="text-3xl font-extrabold text-blue-600">
+                  {(waterTarget / 1000).toFixed(1)}L
+                </span>
+              </div>
+
+              <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
+                <div
+                  className="h-3 rounded-full bg-blue-500 transition-all duration-500"
+                  style={{ width: `${waterProgress}%` }}
+                ></div>
+              </div>
+
+              <p className="text-sm text-gray-700 mt-1">
+                Goal:{" "}
+                <span className="font-bold">
+                  {(waterTarget / 1000).toFixed(1)}L
+                </span>{" "}
+                (Based on your weight)
+              </p>
+            </div>
+          </div>
+
+          {/* RIGHT: weight status + Log Weight */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 border-b pb-2">
+              Progress & Goals
+            </h2>
+
+            <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-500">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                Your Weight Status
+              </h3>
+
+              {bmiStatus ? (
+                <>
+                  <p className="text-sm text-gray-600">BMI: {bmiStatus.bmi}</p>
+                  <p className={`text-xl font-extrabold ${bmiStatus.color}`}>
+                    {bmiStatus.status}
+                  </p>
+                </>
+              ) : (
+                <p className="text-gray-600">
+                  Enter your data to calculate BMI.
+                </p>
+              )}
+            </div>
+
+            {/* Weight Trend Chart */}
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Weight Trend (Last 4 Weeks)</h3>
+              
+              {loadingWeights ? (
+                <div className="h-40 flex items-center justify-center">
+                  <p className="text-gray-500">Loading weight data...</p>
+                </div>
+              ) : weightEntries.length > 0 ? (
+                <div className="h-40">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={weightEntries}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '5px' }}
+                        formatter={(value) => [`${value} kg`, 'Weight']}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="weight" 
+                        stroke="#EF4444" 
+                        strokeWidth={3} 
+                        dot={{ fill: '#EF4444', r: 4 }} 
+                        activeDot={{ r: 8 }} 
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="h-40 flex items-center justify-center">
+                  <p className="text-gray-500">No weight entries yet. Start logging your weight!</p>
+                </div>
+              )}
+              
+              {isAuthenticated ? (
+                <Link 
+                  to="/log-weight"
+                  className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 block text-center"
+                >
+                  Log Weight
+                </Link>
+              ) : (
+                <button
+                  onClick={handleLogWeightClick}
+                  className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Login to Log Weight
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

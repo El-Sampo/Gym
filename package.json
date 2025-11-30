@@ -12,7 +12,9 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/vite": "^4.1.17",
+    "bcryptjs": "^3.0.3",
     "es-toolkit": "^1.42.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.546.0",
     "react": "^19.2.0",
     "react-dom": "^19.1.1",

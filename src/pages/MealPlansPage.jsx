@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import StickyContactChannel from "../components/StickyContactChannel";
 
 import grilledChickenImg from "../../images/Grilled Chicken Asparagus.jpg";
@@ -553,6 +554,36 @@ const MealCard = ({ meal }) => (
 );
 
 const MealPlansPage = () => {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    if (!token || !user) {
+      // Redirect to home page or show login modal
+      navigate('/fitnesstracker');
+    } else {
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
+  }, [navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-32 flex items-center justify-center">
+        <p className="text-xl text-gray-600">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null; // Will redirect
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 pt-32 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto py-12">

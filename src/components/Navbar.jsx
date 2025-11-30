@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom"; // Ensure you import NavLink from 'react-router-dom'
+import { NavLink } from "react-router-dom";
+import { User, LogOut } from 'lucide-react';
 
-function Navbar({ activeSection, setActiveSection }) {
+function Navbar({ activeSection, setActiveSection, onOpenAuthModal, currentUser, onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -33,6 +34,7 @@ function Navbar({ activeSection, setActiveSection }) {
     { name: "FitnessTracker", href: "/fitnesstracker", id: "fitnesstracker" },
     { name: "Exercises", href: "/exercises", id: "exercises" },
   ];
+
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
@@ -78,12 +80,40 @@ function Navbar({ activeSection, setActiveSection }) {
                 ></span>
               </NavLink>
             ))}
+            
+            {/* Join Now Button - Desktop */}
             <NavLink
               to="/contactpage"
-              className={`ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] bg-red-600 text-white hover:bg-red-700 hover-shadow-lg`}
+              className="ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] bg-red-600 text-white hover:bg-red-700 hover:shadow-lg"
             >
               Join Now
             </NavLink>
+
+            {/* Auth Button Section - Desktop */}
+            {currentUser ? (
+              <div className="flex items-center space-x-3 ml-4">
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
+                  <User className="w-4 h-4 text-gray-600" />
+                  <span className="text-gray-700 font-medium text-sm">
+                    {currentUser.name}
+                  </span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-300"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="text-sm font-medium">Logout</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAuthModal}
+                className="ml-3 px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] bg-gray-800 text-white hover:bg-gray-900 hover:shadow-lg"
+              >
+                Login / Sign Up
+              </button>
+            )}
           </div>
 
           {/*Mobile menus btn*/}
@@ -103,7 +133,6 @@ function Navbar({ activeSection, setActiveSection }) {
                 aria-hidden="true"
               >
                 {/*conditional rendering */}
-
                 {isOpen ? (
                   <path
                     strokeLinecap="round"
@@ -129,7 +158,7 @@ function Navbar({ activeSection, setActiveSection }) {
       <div
         className={`lg:hidden transition-all duration-300 ease-in-out ${
           isOpen
-            ? "max-h-[420px] opacity-100"
+            ? "max-h-[500px] opacity-100"
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
@@ -139,11 +168,8 @@ function Navbar({ activeSection, setActiveSection }) {
             <NavLink
               key={link.href}
               to={link.href}
-              le
-              menu
-              on
-              selection
-              className={`block px-4 pt-2.5 rounded-lg text-base font-medium 
+              onClick={toggleMenu}
+              className={`block px-4 py-2.5 rounded-lg text-base font-medium 
                           transition-all duration-300 
                           hover:text-red-600
                         `}
@@ -151,14 +177,50 @@ function Navbar({ activeSection, setActiveSection }) {
               {link.name}
             </NavLink>
           ))}
-          <div className="pt-2 pb-1 ">
+          
+          {/* Join Now Button - Mobile */}
+          <div className="pt-2 pb-1">
             <NavLink
               to="/contactpage"
               onClick={toggleMenu}
-              className={`ml-3 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:translate-y-[-2px] bg-red-600 text-white hover:bg-red-700 hover-shadow-lg`}
+              className="block w-full px-4 py-2 rounded-full font-medium text-sm text-center transition-all duration-300 bg-red-600 text-white hover:bg-red-700 hover:shadow-lg"
             >
               Join Now
             </NavLink>
+          </div>
+
+          {/* Auth Section - Mobile */}
+          <div className="pt-2 pb-1 border-t border-gray-200">
+            {currentUser ? (
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-lg">
+                  <User className="w-4 h-4 text-gray-600" />
+                  <span className="text-gray-700 font-medium text-sm">
+                    {currentUser.name}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    onLogout();
+                    toggleMenu();
+                  }}
+                  className="w-full flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-300"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="text-sm font-medium">Logout</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  onOpenAuthModal();
+                  toggleMenu();
+                }}
+                className="w-full px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 bg-gray-800 text-white hover:bg-gray-900 hover:shadow-lg"
+              >
+                Login / Sign Up
+              </button>
+            )}
           </div>
         </div>
       </div>
