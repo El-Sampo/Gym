@@ -1,26 +1,3 @@
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const cors = require("cors");
-// require("dotenv").config();
-
-// const userRoutes = require("./routes/userRoutes");
-
-// const app = express();
-
-// app.use(express.json());
-// app.use(cors());
-
-// mongoose
-//   .connect(process.env.MONGO_URI)
-//   .then(() => console.log("MongoDB Connected"))
-//   .catch((err) => console.log("DB Error:", err));
-
-// app.use("/api/user", userRoutes);
-
-// app.listen(process.env.PORT, () =>
-//   console.log("Server running on port", process.env.PORT)
-// );
-
 // backend/server.js
 const express = require('express');
 const mongoose = require('mongoose');
@@ -56,7 +33,8 @@ if (!MONGODB_URI || MONGODB_URI === '') {
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
-// User Schema
+
+// User Schema - UPDATED WITH NEW FIELDS
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -75,6 +53,19 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
+  // NEW FIELDS FOR FITNESS DATA
+  age: { type: Number },
+  gender: { type: String },
+  height: { type: Number }, // in cm
+  weight: { type: Number }, // in kg
+  activityLevel: { type: String },
+  goal: { type: String },
+  caloriesTarget: { type: Number },
+  waterTarget: { type: Number },
+  waterIntake: { type: Number, default: 0 },
+  proteinTarget: { type: Number },
+  carbsTarget: { type: Number },
+  fatsTarget: { type: Number },
   createdAt: {
     type: Date,
     default: Date.now
@@ -82,6 +73,31 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
+// Weight Entry Schema
+const weightEntrySchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  weight: {
+    type: Number,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+weightEntrySchema.index({ userId: 1, date: -1 });
+
+const WeightEntry = mongoose.model('WeightEntry', weightEntrySchema);
 
 // Routes
 
@@ -240,7 +256,7 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// Get User Profile (Protected Route)
+// Get User Profile (Protected Route) - UPDATED
 app.get('/api/auth/profile', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select('-password');
@@ -250,13 +266,25 @@ app.get('/api/auth/profile', verifyToken, async (req, res) => {
         message: 'User not found' 
       });
     }
-
+// Send profile data back to frontend
     res.json({
       success: true,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        age: user.age,
+        gender: user.gender,
+        height: user.height,
+        weight: user.weight,
+        activityLevel: user.activityLevel,
+        goal: user.goal,
+        caloriesTarget: user.caloriesTarget,
+        waterTarget: user.waterTarget,
+        waterIntake: user.waterIntake,
+        proteinTarget: user.proteinTarget,
+        carbsTarget: user.carbsTarget,
+        fatsTarget: user.fatsTarget,
         createdAt: user.createdAt
       }
     });
@@ -269,33 +297,76 @@ app.get('/api/auth/profile', verifyToken, async (req, res) => {
   }
 });
 
-// backend/server.js - ADD THESE ROUTES TO YOUR EXISTING SERVER.JS
+// NEW: Update User Profile (Protected Route)
+app.put('/api/user/profile', verifyToken, async (req, res) => {
+  try {
+    const { 
+      age, 
+      gender, 
+      height, 
+      weight, 
+      activityLevel, 
+      goal,
+      caloriesTarget,
+      waterTarget,
+      proteinTarget,
+      carbsTarget,
+      fatsTarget
+    } = req.body;
 
-// Weight Entry Schema (add this after User schema)
-const weightEntrySchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  weight: {
-    type: Number,
-    required: true
-  },
-  date: {
-    type: Date,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    const user = await User.findById(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+
+    // Update user fields
+    if (age !== undefined) user.age = age;
+    if (gender !== undefined) user.gender = gender;
+    if (height !== undefined) user.height = height;
+    if (weight !== undefined) user.weight = weight;
+    if (activityLevel !== undefined) user.activityLevel = activityLevel;
+    if (goal !== undefined) user.goal = goal;
+    if (caloriesTarget !== undefined) user.caloriesTarget = caloriesTarget;
+    if (waterTarget !== undefined) user.waterTarget = waterTarget;
+    if (proteinTarget !== undefined) user.proteinTarget = proteinTarget;
+    if (carbsTarget !== undefined) user.carbsTarget = carbsTarget;
+    if (fatsTarget !== undefined) user.fatsTarget = fatsTarget;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        gender: user.gender,
+        height: user.height,
+        weight: user.weight,
+        activityLevel: user.activityLevel,
+        goal: user.goal,
+        caloriesTarget: user.caloriesTarget,
+        waterTarget: user.waterTarget,
+        proteinTarget: user.proteinTarget,
+        carbsTarget: user.carbsTarget,
+        fatsTarget: user.fatsTarget
+      }
+    });
+
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error' 
+    });
   }
 });
-
-// Create index for efficient queries
-weightEntrySchema.index({ userId: 1, date: -1 });
-
-const WeightEntry = mongoose.model('WeightEntry', weightEntrySchema);
 
 // ============ WEIGHT LOGGING ROUTES ============
 
@@ -304,7 +375,7 @@ app.get('/api/weight-entries', verifyToken, async (req, res) => {
   try {
     const entries = await WeightEntry.find({ userId: req.userId })
       .sort({ date: -1 })
-      .limit(100); // Limit to last 100 entries
+      .limit(100);
 
     res.json({
       success: true,
@@ -328,7 +399,6 @@ app.post('/api/weight-entries', verifyToken, async (req, res) => {
   try {
     const { weight, date } = req.body;
 
-    // Validation
     if (!weight || !date) {
       return res.status(400).json({ 
         success: false, 
@@ -350,7 +420,6 @@ app.post('/api/weight-entries', verifyToken, async (req, res) => {
     });
 
     if (existingEntry) {
-      // Update existing entry
       existingEntry.weight = weight;
       await existingEntry.save();
 
@@ -365,7 +434,6 @@ app.post('/api/weight-entries', verifyToken, async (req, res) => {
       });
     }
 
-    // Create new entry
     const weightEntry = new WeightEntry({
       userId: req.userId,
       weight: Number(weight),

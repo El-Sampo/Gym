@@ -102,26 +102,6 @@ const FormField = ({ label, id, type = "number", value, onChange, options }) => 
   </div>
 );
 
-const MacroGoal = ({ title, current, goal, color }) => {
-  const percentage = Math.min(100, (current / goal) * 100);
-  return (
-    <div className="mb-4">
-      <div className="flex justify-between text-sm font-medium text-gray-900">
-        <span>
-          {title} ({current}g / {goal}g)
-        </span>
-        <span>{Math.round(percentage)}%</span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-        <div
-          className="h-2.5 rounded-full"
-          style={{ width: `${percentage}%`, backgroundColor: color }}
-        ></div>
-      </div>
-    </div>
-  );
-};
-
 const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentUser }) => {
   const [formData, setFormData] = useState(DEFAULT_FORM);
   const [results, setResults] = useState(null);
@@ -129,7 +109,8 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
   const [error, setError] = useState("");
   const [weightEntries, setWeightEntries] = useState([]);
   const [loadingWeights, setLoadingWeights] = useState(false);
-  const [showMealPlanLoginMessage, setShowMealPlanLoginMessage] = useState(false);
+  const [showMealPlanWarning, setShowMealPlanWarning] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Auth state
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -161,8 +142,51 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
   useEffect(() => {
     if (isAuthenticated) {
       fetchWeightEntries();
+      loadUserProfile();
     }
   }, [isAuthenticated]);
+
+  // NEW: Load user profile data from database
+  const loadUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/auth/profile', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.user) {
+        // If user has saved profile data, populate the form
+        if (data.user.age) {
+          setFormData({
+            age: data.user.age || 30,
+            gender: data.user.gender || 'female',
+            height: data.user.height || 170,
+            weight: data.user.weight || 100,
+            activityLevel: data.user.activityLevel || 'moderate',
+            goal: data.user.goal || 'maintenance',
+          });
+
+          // If user has calculated results, show them
+          if (data.user.caloriesTarget) {
+            setResults({
+              target: data.user.caloriesTarget,
+              maintenance: data.user.caloriesTarget
+            });
+            
+            if (data.user.height && data.user.weight) {
+              setBmiStatus(getWeightStatus(data.user.weight, data.user.height));
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+    }
+  };
 
   const fetchWeightEntries = async () => {
     setLoadingWeights(true);
@@ -210,7 +234,7 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Check authentication first
@@ -229,6 +253,54 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
     const newResults = calculateCalories(formData);
     setResults(newResults);
     setBmiStatus(getWeightStatus(weight, height));
+
+    // Calculate macro targets
+    const macros = {
+      protein: Math.round((newResults.target * 0.3) / 4),
+      carbs: Math.round((newResults.target * 0.45) / 4),
+      fats: Math.round((newResults.target * 0.25) / 9),
+    };
+
+    const waterGoal = Math.max(2000, Number(weight) * 33);
+
+    // SAVE TO DATABASE
+    setSaving(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          age: formData.age,
+          gender: formData.gender,
+          height: formData.height,
+          weight: formData.weight,
+          activityLevel: formData.activityLevel,
+          goal: formData.goal,
+          caloriesTarget: newResults.target,
+          waterTarget: waterGoal,
+          proteinTarget: macros.protein,
+          carbsTarget: macros.carbs,
+          fatsTarget: macros.fats
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('✅ Profile saved successfully to database!');
+      } else {
+        console.error('❌ Failed to save profile:', data.message);
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      setError('Failed to save profile. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleLogWeightClick = (e) => {
@@ -241,13 +313,10 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
   const handleMealPlanClick = (e) => {
     if (!isAuthenticated) {
       e.preventDefault();
-      setShowMealPlanLoginMessage(true);
+      setShowMealPlanWarning(true);
       setIsAuthModalOpen(true);
-      
-      // Hide message after 3 seconds
-      setTimeout(() => {
-        setShowMealPlanLoginMessage(false);
-      }, 3000);
+      // Hide warning after 5 seconds
+      setTimeout(() => setShowMealPlanWarning(false), 5000);
     }
   };
 
@@ -352,9 +421,10 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
 
               <button
                 type="submit"
-                className="w-full mt-5 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-lg tracking-wide shadow-lg shadow-red-500/40 transition"
+                disabled={saving}
+                className="w-full mt-5 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-lg tracking-wide shadow-lg shadow-red-500/40 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isAuthenticated ? 'CALCULATE' : 'LOGIN TO CALCULATE'}
+                {saving ? 'SAVING...' : (isAuthenticated ? 'CALCULATE & SAVE' : 'LOGIN TO CALCULATE')}
               </button>
             </form>
 
@@ -367,6 +437,7 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
                     kcal/Day
                   </span>
                 </h3>
+                <p className="text-xs text-green-400 mt-2">✓ Saved to your profile</p>
               </div>
             )}
           </div>
@@ -444,24 +515,26 @@ const CalorieCalculatorSection = ({ onAuthSuccess: parentOnAuthSuccess, currentU
               {isAuthenticated ? (
                 <Link
                   to="/meal-plans"
-                  className="inline-block w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50 transition"
+                  className="inline-block w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50 transition duration-200"
                 >
                   View All Meal Plans
                 </Link>
               ) : (
-                <div>
+                <>
                   <button
                     onClick={handleMealPlanClick}
-                    className="w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50 transition"
+                    className="w-full text-center border border-green-500 text-green-700 font-semibold py-2 rounded-lg hover:bg-green-50 transition duration-200"
                   >
                     View All Meal Plans
                   </button>
-                  {showMealPlanLoginMessage && (
-                    <p className="text-red-600 text-sm font-semibold mt-2 text-center animate-pulse">
-                      ⚠️ Please Login to access Meal Plans
-                    </p>
+                  {showMealPlanWarning && (
+                    <div className="mt-2 p-2 bg-red-50 border border-red-300 rounded-lg animate-pulse">
+                      <p className="text-red-600 text-sm font-semibold text-center">
+                        ⚠️ Please login to access meal plans
+                      </p>
+                    </div>
                   )}
-                </div>
+                </>
               )}
             </div>
 
